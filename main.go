@@ -2,23 +2,29 @@ package main
 
 import (
 	"log"
+	"os"
+	"strings"
 
-	// "github.com/joho/godotenv"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+
+	"ticketing-pb/hooks"
+	_ "ticketing-pb/migrations"
+	"ticketing-pb/routes"
 )
 
 func main() {
-
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
-
 	app := pocketbase.New()
+
+	isGoRun := strings.HasPrefix(os.Args[0], os.TempDir())
+
+	// Enable auto creation of migration files when making collection changes in the Admin UI
 	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{
-		Automigrate: true,
+		Automigrate: isGoRun,
 	})
+
+	hooks.BindCustomHooks(app)
+	routes.BindCustomRoutes(app)
 
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
