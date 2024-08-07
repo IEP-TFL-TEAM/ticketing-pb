@@ -1,5 +1,7 @@
 package main
 
+import _ "ticketing-pb/migrations"
+
 import (
 	"log"
 	"os"
@@ -7,9 +9,7 @@ import (
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
-
 	"ticketing-pb/hooks"
-	_ "ticketing-pb/migrations"
 	"ticketing-pb/routes"
 )
 
