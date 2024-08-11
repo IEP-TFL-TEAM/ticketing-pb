@@ -18,6 +18,6 @@ func BindCustomHooks(app *pocketbase.PocketBase) {
 			return nil
 		}
 
-		return IncrementTicketCount(app, e)
+		return IncrementTicketCount(app, e, authRecord)
 	})
 }
