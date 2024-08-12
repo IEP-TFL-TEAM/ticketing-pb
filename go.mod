@@ -3,6 +3,7 @@ module ticketing-pb
 go 1.22.5
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/pocketbase/dbx v1.10.1
 	github.com/pocketbase/pocketbase v0.22.18
 )
