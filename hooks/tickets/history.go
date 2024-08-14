@@ -32,7 +32,7 @@ func CreateCommentHistory(app *pocketbase.PocketBase, e *core.RecordCreateEvent,
 
 	ticket, _ := app.Dao().FindRecordById("tickets", e.Record.GetString("ticketId"))
 
-	action := fmt.Sprintf("%s commented on ticket %s", authRecord.GetString("firstName"), ticket.GetString("count"))
+	action := fmt.Sprintf("%s commented on ticket #%s", authRecord.GetString("firstName"), ticket.GetString("count"))
 
 	return CreateHistoryRecord(app, collectionName, authRecord.Id, ticket.GetId(), action)
 }
@@ -42,7 +42,7 @@ func CreateTicketCreationHistory(app *pocketbase.PocketBase, e *core.RecordCreat
 
 	ticketId := e.Record.Id
 
-	action := fmt.Sprintf("%s created ticket %s", authRecord.GetString("firstName"), e.Record.GetString("count"))
+	action := fmt.Sprintf("%s created ticket #%s", authRecord.GetString("firstName"), e.Record.GetString("count"))
 
 	return CreateHistoryRecord(app, collectionName, authRecord.Id, ticketId, action)
 }
