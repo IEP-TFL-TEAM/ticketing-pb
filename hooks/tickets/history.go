@@ -52,7 +52,7 @@ func CreateTicketUpdateHistory(app *pocketbase.PocketBase, e *core.RecordUpdateE
 
 	ticketId := e.Record.Id
 
-	fieldsToCheck := []string{"status", "isVerified", "title", "description", "reportedBy", "teamId"}
+	fieldsToCheck := []string{"status", "title", "description", "reportedBy", "teamId"}
 
 	for _, field := range fieldsToCheck {
 		if e.Record.Get(field) != e.Record.OriginalCopy().Get(field) {
