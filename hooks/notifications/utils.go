@@ -29,9 +29,8 @@ func GetMailAddressesByTeamId(app *pocketbase.PocketBase, teamId string) []mail.
 	return toMailAddresses
 }
 
-func GetMailAddressesByRole(app *pocketbase.PocketBase, role string) []mail.Address {
-	baseUsers, _ := app.Dao().FindRecordsByExpr("users",
-		dbx.HashExp{"role": role},
+func GetMailAddressesForAutoEmail(app *pocketbase.PocketBase) []mail.Address {
+	baseUsers, _ := app.Dao().FindRecordsByExpr("recipients",
 		dbx.HashExp{"verified": true},
 	)
 
@@ -39,7 +38,7 @@ func GetMailAddressesByRole(app *pocketbase.PocketBase, role string) []mail.Addr
 	for _, baseUser := range baseUsers {
 		mailAddress := mail.Address{
 			Address: baseUser.Email(),
-			Name:    baseUser.GetString("firstName") + " " + baseUser.GetString("lastName"),
+			Name:    baseUser.GetString("name"),
 		}
 		toMailAddresses = append(toMailAddresses, mailAddress)
 	}

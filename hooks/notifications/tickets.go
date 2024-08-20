@@ -14,7 +14,7 @@ var uiURL = os.Getenv("UI_URL")
 
 func CreateTicketEmailNotification(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
 	mailDetails := MailDetails{
-		toMailAddresses: GetMailAddressesByRole(app, "admin"),
+		toMailAddresses: GetMailAddressesForAutoEmail(app),
 		subject:         "New Ticket",
 		sendTo:          "Test Room",
 		action:          "Created",
