@@ -51,7 +51,7 @@ func ParseAddressFromEmail(email string) mail.Address {
 }
 
 func SendEmailNotification(app *pocketbase.PocketBase, mailDetails MailDetails) error {
-	fileContent, err := os.ReadFile("templates/ticket.html")
+	fileContent, err := os.ReadFile("templates/new-ticket.html")
 	if err != nil {
 		log.Fatal(err)
 	}
