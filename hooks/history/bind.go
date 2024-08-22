@@ -1,4 +1,4 @@
-package notifications
+package history
 
 import (
 	"github.com/pocketbase/pocketbase"
@@ -6,4 +6,6 @@ import (
 
 func BindCustomHooks(app *pocketbase.PocketBase) {
 	NewTicket(app)
+	NewTicketHistory(app)
+	NewCommentHistory(app)
 }

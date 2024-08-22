@@ -2,11 +2,11 @@ package hooks
 
 import (
 	"github.com/pocketbase/pocketbase"
+	"ticketing-pb/hooks/history"
 	"ticketing-pb/hooks/notifications"
-	"ticketing-pb/hooks/tickets"
 )
 
 func BindCustomHooks(app *pocketbase.PocketBase) {
-	tickets.BindCustomHooks(app)
+	history.BindCustomHooks(app)
 	notifications.BindCustomHooks(app)
 }

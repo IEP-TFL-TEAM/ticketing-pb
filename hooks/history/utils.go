@@ -1,4 +1,4 @@
-package tickets
+package history
 
 import (
 	"fmt"
