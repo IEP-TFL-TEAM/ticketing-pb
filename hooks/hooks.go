@@ -8,5 +8,5 @@ import (
 
 func BindCustomHooks(app *pocketbase.PocketBase) {
 	history.BindCustomHooks(app)
-	notifications.BindCustomHooks(app)
+	notifications.BindCustomNotifications(app)
 }
