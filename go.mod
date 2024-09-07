@@ -1,6 +1,8 @@
 module ticketing-pb
 
-go 1.20
+go 1.21
+
+toolchain go1.23.0
 
 require (
 	github.com/joho/godotenv v1.5.1
