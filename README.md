@@ -8,8 +8,7 @@ Once you've successfully cloned the project:
 
 ```bash
 # firstly ensure that you've downloaded go programming language
-
-# run the command
+# run the command to run locally
 # this will install the dependencies and run the dev server
 go run main.go serve
 ```
