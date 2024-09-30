@@ -1,10 +1,6 @@
 package notifications
 
 import (
-	"log"
-	"os"
-
-	"github.com/joho/godotenv"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
@@ -12,23 +8,6 @@ import (
 )
 
 func BindCustomNotifications(app *pocketbase.PocketBase) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	var envVars = map[string]string{
-		"UI_URL": "URL_URL",
-		"NOC":    "NOC",
-	}
-
-	for key, name := range envVars {
-		value := os.Getenv(key)
-		if value == "" {
-			log.Fatalf("Missing %s: %s env var", name, key)
-		}
-	}
-
 	app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {

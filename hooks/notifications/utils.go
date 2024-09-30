@@ -56,13 +56,7 @@ func SendEmailNotification(app *pocketbase.PocketBase, mailDetails MailDetails) 
 		log.Fatal(err)
 	}
 
-	nocMail := os.Getenv("NOC")
-
 	mailBody := string(fileContent)
-
-	cc := []mail.Address{
-		ParseAddressFromEmail(nocMail),
-	}
 
 	message := &mailer.Message{
 		From: mail.Address{
@@ -76,7 +70,6 @@ func SendEmailNotification(app *pocketbase.PocketBase, mailDetails MailDetails) 
 			mailDetails.action,
 			mailDetails.url,
 		),
-		Cc: cc,
 	}
 	return app.NewMailClient().Send(message)
 }
