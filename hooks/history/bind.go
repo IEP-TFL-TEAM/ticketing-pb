@@ -8,4 +8,7 @@ func BindCustomHooks(app *pocketbase.PocketBase) {
 	NewTicket(app)
 	NewTicketHistory(app)
 	NewCommentHistory(app)
+
+	NewChangeRequest(app)
+	NewRoutineMaintenance(app)
 }
