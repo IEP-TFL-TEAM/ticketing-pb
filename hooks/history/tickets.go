@@ -1,7 +1,9 @@
 package history
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -20,7 +22,7 @@ func NewTicket(app *pocketbase.PocketBase) {
 			return nil
 		}
 
-		return IncrementTicketCount(app, e, authRecord)
+		return GenerateTicketNumber(app, e, authRecord)
 	})
 }
 
@@ -49,13 +51,21 @@ func NewTicketHistory(app *pocketbase.PocketBase) {
 	})
 }
 
-func IncrementTicketCount(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
+func GenerateTicketNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
 	ticketCount, err := app.Dao().FindRecordById("ticketCount", "1")
 	println(ticketCount)
 
 	if err != nil {
 		return err
 	}
+
+	now := time.Now()
+	datePart := now.Format("020106")
+	timePart := now.Format("150405")
+
+	ticketNumber := fmt.Sprintf("TT%s%s NMT", datePart, timePart)
+
+	e.Record.Set("ticketNumber", ticketNumber)
 	e.Record.Set("count", ticketCount.GetString("totalItems"))
 
 	return nil
