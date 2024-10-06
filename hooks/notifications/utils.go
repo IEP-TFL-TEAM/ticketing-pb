@@ -29,9 +29,9 @@ func GetMailAddressesByTeamId(app *pocketbase.PocketBase, teamId string) []mail.
 	return toMailAddresses
 }
 
-func GetMailAddressesForAutoEmail(app *pocketbase.PocketBase) []mail.Address {
+func GetMailAddressesForAutoEmail(app *pocketbase.PocketBase, category string) []mail.Address {
 	baseUsers, _ := app.Dao().FindRecordsByExpr("recipients",
-		dbx.HashExp{"verified": true},
+		dbx.HashExp{"verified": true, "categoryId": category},
 	)
 
 	toMailAddresses := []mail.Address{}

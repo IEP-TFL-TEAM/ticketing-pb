@@ -1,13 +1,16 @@
 package notifications
 
 import (
+	"fmt"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 )
 
 func NewTicket(app *pocketbase.PocketBase, e *core.RecordCreateEvent) error {
+	categoryId := fmt.Sprintf("%v", e.Record.Get("categoryId"))
+
 	mailDetails := MailDetails{
-		toMailAddresses: GetMailAddressesForAutoEmail(app),
+		toMailAddresses: GetMailAddressesForAutoEmail(app, categoryId),
 		subject:         "New Ticket",
 		sendTo:          "Team",
 		action:          "Created",
@@ -18,8 +21,10 @@ func NewTicket(app *pocketbase.PocketBase, e *core.RecordCreateEvent) error {
 }
 
 func ResolveTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error {
+	categoryId := fmt.Sprintf("%v", e.Record.Get("categoryId"))
+
 	mailDetails := MailDetails{
-		toMailAddresses: GetMailAddressesForAutoEmail(app),
+		toMailAddresses: GetMailAddressesForAutoEmail(app, categoryId),
 		subject:         "Ticket Pending",
 		sendTo:          "Team",
 		action:          "re-opened. Please resolve",
@@ -30,8 +35,10 @@ func ResolveTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error 
 }
 
 func ApprovedTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error {
+	categoryId := fmt.Sprintf("%v", e.Record.Get("categoryId"))
+
 	mailDetails := MailDetails{
-		toMailAddresses: GetMailAddressesForAutoEmail(app),
+		toMailAddresses: GetMailAddressesForAutoEmail(app, categoryId),
 		subject:         "Ticket Approved",
 		sendTo:          "Team",
 		action:          "approved",
@@ -42,8 +49,10 @@ func ApprovedTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error
 }
 
 func ClosedTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error {
+	categoryId := fmt.Sprintf("%v", e.Record.Get("categoryId"))
+
 	mailDetails := MailDetails{
-		toMailAddresses: GetMailAddressesForAutoEmail(app),
+		toMailAddresses: GetMailAddressesForAutoEmail(app, categoryId),
 		subject:         "Ticket Closed",
 		sendTo:          "Team",
 		action:          "closed",
