@@ -45,8 +45,8 @@ func BindCustomNotifications(app *pocketbase.PocketBase) {
 					if newStatus == "CLOSED" {
 						return ClosedTicket(app, e)
 					}
-					if newStatus == "APPROVED" {
-						return ApprovedTicket(app, e)
+					if newStatus == "OPEN" {
+						return OpenedTicket(app, e)
 					}
 				}
 			}

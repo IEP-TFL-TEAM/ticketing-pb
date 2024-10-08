@@ -34,14 +34,14 @@ func ResolveTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error 
 	return SendEmailNotification(app, mailDetails)
 }
 
-func ApprovedTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error {
+func OpenedTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error {
 	categoryId := fmt.Sprintf("%v", e.Record.Get("categoryId"))
 
 	mailDetails := MailDetails{
 		toMailAddresses: GetMailAddressesForAutoEmail(app, categoryId),
-		subject:         "Ticket Approved",
+		subject:         "Ticket Opened",
 		sendTo:          "Team",
-		action:          "approved",
+		action:          "opened",
 		url:             app.Settings().Meta.AppUrl + "/tickets/" + string(e.Record.Id),
 	}
 
