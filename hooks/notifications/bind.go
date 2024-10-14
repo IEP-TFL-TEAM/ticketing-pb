@@ -31,14 +31,13 @@ func BindCustomNotifications(app *pocketbase.PocketBase) {
 			return nil
 		}
 
-		fieldsToCheck := []string{"status"}
+		fieldsToCheck := []string{"status", "categoryId"}
 
 		for _, field := range fieldsToCheck {
 			if e.Record.Get(field) != e.Record.OriginalCopy().Get(field) {
-
-				newStatus := e.Record.GetString(field)
-
 				if field == "status" {
+					newStatus := e.Record.GetString(field)
+
 					if newStatus == "PENDING" {
 						return ResolveTicket(app, e)
 					}
@@ -48,6 +47,10 @@ func BindCustomNotifications(app *pocketbase.PocketBase) {
 					if newStatus == "OPEN" {
 						return OpenedTicket(app, e)
 					}
+				}
+
+				if field == "categoryId" {
+					return EscalatedTicket(app, e)
 				}
 			}
 		}

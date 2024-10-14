@@ -61,3 +61,17 @@ func ClosedTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error {
 
 	return SendEmailNotification(app, mailDetails)
 }
+
+func EscalatedTicket(app *pocketbase.PocketBase, e *core.RecordUpdateEvent) error {
+	categoryId := fmt.Sprintf("%v", e.Record.Get("categoryId"))
+
+	mailDetails := MailDetails{
+		toMailAddresses: GetMailAddressesForAutoEmail(app, categoryId),
+		subject:         "Escalated Ticket",
+		sendTo:          "Team",
+		action:          "Escalated",
+		url:             app.Settings().Meta.AppUrl + "/tickets/" + string(e.Record.Id),
+	}
+
+	return SendEmailNotification(app, mailDetails)
+}
