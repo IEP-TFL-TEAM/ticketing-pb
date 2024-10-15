@@ -52,7 +52,7 @@ func CreateTicketUpdateHistory(app *pocketbase.PocketBase, e *core.RecordUpdateE
 
 	ticketId := e.Record.Id
 
-	fieldsToCheck := []string{"status", "title", "description", "reportedBy", "teamId"}
+	fieldsToCheck := []string{"status", "title", "description", "reportedBy", "teamId", "categoryId"}
 
 	for _, field := range fieldsToCheck {
 		if e.Record.Get(field) != e.Record.OriginalCopy().Get(field) {
@@ -67,6 +67,18 @@ func CreateTicketUpdateHistory(app *pocketbase.PocketBase, e *core.RecordUpdateE
 				}
 
 				newRecord, _ := app.Dao().FindRecordById("teams", newStatus)
+				newStatus = newRecord.GetString("name")
+			}
+
+			if field == "categoryId" {
+				field = "Category"
+
+				if originalStatus != "" {
+					oldRecord, _ := app.Dao().FindRecordById("categories", originalStatus)
+					originalStatus = oldRecord.GetString("name")
+				}
+
+				newRecord, _ := app.Dao().FindRecordById("categories", newStatus)
 				newStatus = newRecord.GetString("name")
 			}
 
