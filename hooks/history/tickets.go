@@ -63,7 +63,7 @@ func GenerateTicketNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent,
 	datePart := now.Format("020106")
 	timePart := now.Format("150405")
 
-	ticketNumber := fmt.Sprintf("TT%s%s NMT", datePart, timePart)
+	ticketNumber := fmt.Sprintf("%s%s TT", datePart, timePart)
 
 	e.Record.Set("ticketNumber", ticketNumber)
 	e.Record.Set("count", ticketCount.GetString("totalItems"))

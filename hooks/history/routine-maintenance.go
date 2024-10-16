@@ -30,7 +30,7 @@ func GenerateRoutineMaintenanceNumber(app *pocketbase.PocketBase, e *core.Record
 	datePart := now.Format("020106")
 	timePart := now.Format("150405")
 
-	ticketNumber := fmt.Sprintf("RM%s%s NMT", datePart, timePart)
+	ticketNumber := fmt.Sprintf("%s%s RM", datePart, timePart)
 
 	e.Record.Set("ticketNumber", ticketNumber)
 

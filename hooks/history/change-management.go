@@ -30,7 +30,7 @@ func GenerateChangeRequestNumber(app *pocketbase.PocketBase, e *core.RecordCreat
 	datePart := now.Format("020106")
 	timePart := now.Format("150405")
 
-	ticketNumber := fmt.Sprintf("CR%s%s NMT", datePart, timePart)
+	ticketNumber := fmt.Sprintf("%s%s CR", datePart, timePart)
 
 	e.Record.Set("ticketNumber", ticketNumber)
 
