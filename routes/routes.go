@@ -4,4 +4,6 @@ import (
 	"github.com/pocketbase/pocketbase"
 )
 
-func BindCustomRoutes(app *pocketbase.PocketBase) {}
+func BindCustomRoutes(app *pocketbase.PocketBase) {
+	SendBroadcastEmail(app)
+}
