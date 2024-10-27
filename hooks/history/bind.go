@@ -4,7 +4,7 @@ import (
 	"github.com/pocketbase/pocketbase"
 )
 
-func BindCustomHooks(app *pocketbase.PocketBase) {
+func BindCustomHistory(app *pocketbase.PocketBase) {
 	NewTicket(app)
 	NewTicketHistory(app)
 	NewCommentHistory(app)

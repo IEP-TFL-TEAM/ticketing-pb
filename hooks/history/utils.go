@@ -52,23 +52,23 @@ func CreateTicketUpdateHistory(app *pocketbase.PocketBase, e *core.RecordUpdateE
 
 	ticketId := e.Record.Id
 
-	fieldsToCheck := []string{"status", "title", "description", "reportedBy", "teamId", "categoryId"}
+	fieldsToCheck := []string{"status", "title", "description", "reportedBy", "categoryId"}
 
 	for _, field := range fieldsToCheck {
 		if e.Record.Get(field) != e.Record.OriginalCopy().Get(field) {
 
 			originalStatus, newStatus := e.Record.OriginalCopy().GetString(field), e.Record.GetString(field)
 
-			if field == "teamId" {
-				field = "assigned team"
-				if originalStatus != "" {
-					oldRecord, _ := app.Dao().FindRecordById("teams", originalStatus)
-					originalStatus = oldRecord.GetString("name")
-				}
-
-				newRecord, _ := app.Dao().FindRecordById("teams", newStatus)
-				newStatus = newRecord.GetString("name")
-			}
+			// if field == "teamId" {
+			// 	field = "assigned team"
+			// 	if originalStatus != "" {
+			// 		oldRecord, _ := app.Dao().FindRecordById("teams", originalStatus)
+			// 		originalStatus = oldRecord.GetString("name")
+			// 	}
+			//
+			// 	newRecord, _ := app.Dao().FindRecordById("teams", newStatus)
+			// 	newStatus = newRecord.GetString("name")
+			// }
 
 			if field == "categoryId" {
 				field = "Category"

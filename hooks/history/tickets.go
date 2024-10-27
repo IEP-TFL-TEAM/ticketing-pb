@@ -12,13 +12,9 @@ import (
 )
 
 func NewTicket(app *pocketbase.PocketBase) {
-	app.OnRecordBeforeCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+	app.OnRecordBeforeCreateRequest("tickets").Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {
-			return nil
-		}
-
-		if e.Record.Collection().Name != "tickets" {
 			return nil
 		}
 
@@ -27,7 +23,7 @@ func NewTicket(app *pocketbase.PocketBase) {
 }
 
 func NewTicketHistory(app *pocketbase.PocketBase) {
-	app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+	app.OnRecordAfterCreateRequest("tickets", "comments").Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {
 			return nil
@@ -38,9 +34,7 @@ func NewTicketHistory(app *pocketbase.PocketBase) {
 			if err != nil {
 				log.Fatal("Error creating ticket create history")
 			}
-		}
-
-		if e.Record.Collection().Name == "comments" {
+		} else if e.Record.Collection().Name == "comments" {
 			err := CreateCommentHistory(app, e, authRecord)
 			if err != nil {
 				log.Fatal(err)
@@ -49,6 +43,7 @@ func NewTicketHistory(app *pocketbase.PocketBase) {
 
 		return nil
 	})
+
 }
 
 func GenerateTicketNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {

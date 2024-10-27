@@ -8,26 +8,18 @@ import (
 )
 
 func BindCustomNotifications(app *pocketbase.PocketBase) {
-	app.OnRecordAfterCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+	app.OnRecordAfterCreateRequest("tickets").Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {
-			return nil
-		}
-
-		if e.Record.Collection().Name != "tickets" {
 			return nil
 		}
 
 		return NewTicket(app, e)
 	})
 
-	app.OnRecordAfterUpdateRequest().Add(func(e *core.RecordUpdateEvent) error {
+	app.OnRecordAfterUpdateRequest("tickets").Add(func(e *core.RecordUpdateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {
-			return nil
-		}
-
-		if e.Record.Collection().Name != "tickets" {
 			return nil
 		}
 
@@ -40,16 +32,12 @@ func BindCustomNotifications(app *pocketbase.PocketBase) {
 
 					if newStatus == "PENDING" {
 						return ResolveTicket(app, e)
-					}
-					if newStatus == "CLOSED" {
+					} else if newStatus == "CLOSED" {
 						return ClosedTicket(app, e)
-					}
-					if newStatus == "OPEN" {
+					} else if newStatus == "OPEN" {
 						return OpenedTicket(app, e)
 					}
-				}
-
-				if field == "categoryId" {
+				} else if field == "categoryId" {
 					return EscalatedTicket(app, e)
 				}
 			}
