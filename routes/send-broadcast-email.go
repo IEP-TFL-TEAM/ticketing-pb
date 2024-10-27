@@ -24,11 +24,13 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 					Cc            string `form:"cc"`
 					Subject       string `form:"subject"`
 					IncidentStart string `form:"incidentStart"`
+					IncidentEnd   string `form:"incidentEnd"`
 					Description   string `form:"description"`
 					Location      string `form:"location"`
 					AssignedTeams string `form:"assignedTeams"`
 					Update        string `form:"update"`
 					TicketNumber  string `form:"ticketNumber"`
+					BroadcastType string `form:"broadcastType"`
 				}{}
 
 				if err := c.Bind(&data); err != nil {
@@ -40,11 +42,13 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 				cc := data.Cc
 				subject := data.Subject
 				incidentStart := data.IncidentStart
+				incidentEnd := data.IncidentEnd
 				description := data.Description
 				location := data.Location
 				assignedTeams := data.AssignedTeams
 				update := data.Update
 				ticketNumber := data.TicketNumber
+				broadcastType := data.BroadcastType
 
 				var logoUrl = "https://www.telecom.com.fj/wp-content/themes/prototype/img/logo.png"
 
@@ -55,6 +59,7 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 				).Render(map[string]any{
 					"logoUrl":       logoUrl,
 					"incidentStart": incidentStart,
+					"incidentEnd":   incidentEnd,
 					"description":   description,
 					"location":      location,
 					"assignedTeams": assignedTeams,
@@ -70,7 +75,7 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 
 					To:      []mail.Address{{Address: email}},
 					Cc:      []mail.Address{{Address: cc}},
-					Subject: fmt.Sprintf("%s - %s", subject, ticketNumber),
+					Subject: fmt.Sprintf("%s - %s - %s", subject, broadcastType, ticketNumber),
 					HTML:    html,
 				}
 
