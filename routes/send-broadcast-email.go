@@ -47,7 +47,7 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 				location := data.Location
 				assignedTeams := data.AssignedTeams
 				update := data.Update
-				ticketNumber := data.TicketNumber
+				// ticketNumber := data.TicketNumber
 				broadcastType := data.BroadcastType
 
 				var logoUrl = "https://www.telecom.com.fj/wp-content/themes/prototype/img/logo.png"
@@ -75,7 +75,7 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 
 					To:      []mail.Address{{Address: email}},
 					Cc:      []mail.Address{{Address: cc}},
-					Subject: fmt.Sprintf("%s - %s - %s", subject, broadcastType, ticketNumber),
+					Subject: fmt.Sprintf("%s - %s", broadcastType, subject),
 					HTML:    html,
 				}
 
@@ -86,7 +86,7 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 					})
 				}
 
-				return c.JSON(http.StatusOK, "Resent")
+				return c.JSON(http.StatusOK, "Email Sent")
 			},
 			apis.ActivityLogger(app),
 			apis.RequireRecordAuth(),
