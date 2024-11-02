@@ -7,4 +7,5 @@ import (
 func BindCustomRoutes(app *pocketbase.PocketBase) {
 	SendBroadcastEmail(app)
 	SendRoutineCreationNotification(app)
+	SendRequestCreationNotification(app)
 }
