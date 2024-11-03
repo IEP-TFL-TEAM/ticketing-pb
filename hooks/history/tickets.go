@@ -22,6 +22,26 @@ func NewTicket(app *pocketbase.PocketBase) {
 	})
 }
 
+func GenerateTicketNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
+	ticketCount, err := app.Dao().FindRecordById("ticketCount", "1")
+	println(ticketCount)
+
+	if err != nil {
+		return err
+	}
+
+	now := time.Now()
+	datePart := now.Format("020106")
+	timePart := now.Format("150405")
+
+	ticketNumber := fmt.Sprintf("%s%s TT", datePart, timePart)
+
+	e.Record.Set("ticketNumber", ticketNumber)
+	e.Record.Set("count", ticketCount.GetString("totalItems"))
+
+	return nil
+}
+
 func NewTicketHistory(app *pocketbase.PocketBase) {
 	app.OnRecordAfterCreateRequest("tickets", "comments").Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
@@ -44,24 +64,4 @@ func NewTicketHistory(app *pocketbase.PocketBase) {
 		return nil
 	})
 
-}
-
-func GenerateTicketNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
-	ticketCount, err := app.Dao().FindRecordById("ticketCount", "1")
-	println(ticketCount)
-
-	if err != nil {
-		return err
-	}
-
-	now := time.Now()
-	datePart := now.Format("020106")
-	timePart := now.Format("150405")
-
-	ticketNumber := fmt.Sprintf("%s%s TT", datePart, timePart)
-
-	e.Record.Set("ticketNumber", ticketNumber)
-	e.Record.Set("count", ticketCount.GetString("totalItems"))
-
-	return nil
 }

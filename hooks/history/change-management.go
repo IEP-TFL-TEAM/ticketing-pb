@@ -11,13 +11,9 @@ import (
 )
 
 func NewChangeRequest(app *pocketbase.PocketBase) {
-	app.OnRecordBeforeCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+	app.OnRecordBeforeCreateRequest("changerequests").Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {
-			return nil
-		}
-
-		if e.Record.Collection().Name != "changerequests" {
 			return nil
 		}
 

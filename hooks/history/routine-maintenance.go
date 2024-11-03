@@ -11,13 +11,9 @@ import (
 )
 
 func NewRoutineMaintenance(app *pocketbase.PocketBase) {
-	app.OnRecordBeforeCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+	app.OnRecordBeforeCreateRequest("routinemaintenance").Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {
-			return nil
-		}
-
-		if e.Record.Collection().Name != "routinemaintenance" {
 			return nil
 		}
 
