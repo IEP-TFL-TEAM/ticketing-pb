@@ -6,6 +6,7 @@ import (
 
 func BindCustomRoutes(app *pocketbase.PocketBase) {
 	SendBroadcastEmail(app)
+	SendIncidentCreationNotification(app)
 	SendRoutineCreationNotification(app)
 	SendRequestCreationNotification(app)
 }
