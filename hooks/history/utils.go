@@ -9,7 +9,7 @@ import (
 	"github.com/pocketbase/pocketbase/models"
 )
 
-func CreateHistoryRecord(app *pocketbase.PocketBase, collectionName string, userId string, ticketId string, action string) error {
+func CreateHistoryRecord(app *pocketbase.PocketBase, collectionName string, ticketId string, action string) error {
 	collection, err := app.Dao().FindCollectionByNameOrId(collectionName)
 	if err != nil {
 		return err
@@ -19,7 +19,6 @@ func CreateHistoryRecord(app *pocketbase.PocketBase, collectionName string, user
 	form := forms.NewRecordUpsert(app, record)
 
 	form.LoadData(map[string]any{
-		"userId":   userId,
 		"ticketId": ticketId,
 		"action":   action,
 	})
@@ -34,7 +33,7 @@ func CreateCommentHistory(app *pocketbase.PocketBase, e *core.RecordCreateEvent,
 
 	action := fmt.Sprintf("%s commented on ticket #%s", authRecord.GetString("firstName"), ticket.GetString("count"))
 
-	return CreateHistoryRecord(app, collectionName, authRecord.Id, ticket.GetId(), action)
+	return CreateHistoryRecord(app, collectionName, ticket.GetId(), action)
 }
 
 func CreateTicketCreationHistory(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
@@ -44,7 +43,7 @@ func CreateTicketCreationHistory(app *pocketbase.PocketBase, e *core.RecordCreat
 
 	action := fmt.Sprintf("%s created ticket #%s", authRecord.GetString("firstName"), e.Record.GetString("count"))
 
-	return CreateHistoryRecord(app, collectionName, authRecord.Id, ticketId, action)
+	return CreateHistoryRecord(app, collectionName, ticketId, action)
 }
 
 func CreateTicketUpdateHistory(app *pocketbase.PocketBase, e *core.RecordUpdateEvent, authRecord *models.Record) error {
@@ -80,7 +79,7 @@ func CreateTicketUpdateHistory(app *pocketbase.PocketBase, e *core.RecordUpdateE
 
 			actionMsg += fmt.Sprintf(" for ticket #%s", e.Record.GetString("count"))
 
-			err := CreateHistoryRecord(app, collectionName, authRecord.Id, ticketId, actionMsg)
+			err := CreateHistoryRecord(app, collectionName, ticketId, actionMsg)
 			if err != nil {
 				return err
 			}
