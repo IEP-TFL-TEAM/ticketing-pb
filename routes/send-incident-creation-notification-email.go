@@ -25,6 +25,7 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 					StartDate    string `form:"startDate"`
 					Description  string `form:"description"`
 					TicketNumber string `form:"ticketNumber"`
+					ActionType   string `form:"actionType"`
 				}{}
 
 				if err := c.Bind(&data); err != nil {
@@ -37,6 +38,28 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 				startDate := data.StartDate
 				description := data.Description
 				ticketNumber := data.TicketNumber
+				actionType := data.ActionType
+
+				var action string
+				var greeting string
+				var whoToGreet string
+
+				switch actionType {
+				case "create":
+					greeting = "Bula"
+					whoToGreet = "Team"
+					action = "A new Incident has been Created!"
+
+				case "reassign":
+					greeting = "Bula"
+					whoToGreet = ""
+					action = "Your team has been re-assigned this ticket."
+
+				default:
+					return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+						"details": "Invalid action type!",
+					})
+				}
 
 				var logoUrl = "https://www.telecom.com.fj/wp-content/themes/prototype/img/logo.png"
 
@@ -50,7 +73,9 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 					"subject":     subject,
 					"description": description,
 					"url":         fmt.Sprintf("%s/tickets/%s", app.Settings().Meta.AppUrl, id),
-					"action":      "A new Incident has been Created!",
+					"action":      action,
+					"greeting":    greeting,
+					"whoToGreet":  whoToGreet,
 				})
 
 				message := &mailer.Message{
