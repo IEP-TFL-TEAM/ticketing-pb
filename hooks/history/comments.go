@@ -1,7 +1,7 @@
 package history
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -16,25 +16,22 @@ func NewCommentHistory(app *pocketbase.PocketBase) {
 			return nil
 		}
 
-		err := CreateCommentHistory(app, e, authRecord)
+		collection, err := app.Dao().FindCollectionByNameOrId("history")
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
-		return nil
-	})
-}
+		ticket, _ := app.Dao().FindRecordById("tickets", e.Record.GetString("ticketId"))
+		authFullName := fmt.Sprintf("%s %s",
+			authRecord.GetString("firstName"),
+			authRecord.GetString("lastName"))
 
-func UpdatedCommentHistory(app *pocketbase.PocketBase) {
-	app.OnRecordAfterUpdateRequest("tickets").Add(func(e *core.RecordUpdateEvent) error {
-		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
-		if authRecord == nil {
-			return nil
-		}
+		record := models.NewRecord(collection)
+		record.Set("action", fmt.Sprintf("%s added a new comment on this ticket", authFullName))
+		record.Set("ticketId", ticket.GetId())
 
-		err := CreateTicketUpdateHistory(app, e, authRecord)
-		if err != nil {
-			log.Fatal("Error creating comment create history")
+		if err := app.Dao().SaveRecord(record); err != nil {
+			return err
 		}
 
 		return nil
