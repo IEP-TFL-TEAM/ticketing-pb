@@ -10,6 +10,22 @@ import (
 )
 
 func NewCommentHistory(app *pocketbase.PocketBase) {
+	app.OnRecordAfterCreateRequest("comments").Add(func(e *core.RecordCreateEvent) error {
+		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
+		if authRecord == nil {
+			return nil
+		}
+
+		err := CreateCommentHistory(app, e, authRecord)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		return nil
+	})
+}
+
+func UpdatedCommentHistory(app *pocketbase.PocketBase) {
 	app.OnRecordAfterUpdateRequest("tickets").Add(func(e *core.RecordUpdateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {

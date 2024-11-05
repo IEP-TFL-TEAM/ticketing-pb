@@ -7,7 +7,9 @@ import (
 func BindCustomHistory(app *pocketbase.PocketBase) {
 	NewTicket(app)
 	NewTicketHistory(app)
+
 	NewCommentHistory(app)
+	UpdatedCommentHistory(app)
 
 	NewChangeRequest(app)
 	NewRoutineMaintenance(app)
