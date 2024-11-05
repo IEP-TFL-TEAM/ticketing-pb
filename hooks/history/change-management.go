@@ -23,10 +23,7 @@ func NewChangeRequest(app *pocketbase.PocketBase) {
 
 func GenerateChangeRequestNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
 	now := time.Now()
-	datePart := now.Format("020106")
-	timePart := now.Format("150405")
-
-	ticketNumber := fmt.Sprintf("%s%s CR", datePart, timePart)
+	ticketNumber := fmt.Sprintf("%s%s CR", now.Format("020106"), now.Format("150405"))
 
 	e.Record.Set("ticketNumber", ticketNumber)
 
