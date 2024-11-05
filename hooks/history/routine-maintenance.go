@@ -17,15 +17,11 @@ func NewRoutineMaintenance(app *pocketbase.PocketBase) {
 			return nil
 		}
 
-		return GenerateRoutineMaintenanceNumber(app, e, authRecord)
+		now := time.Now()
+		ticketNumber := fmt.Sprintf("%s%s RM", now.Format("020106"), now.Format("150405"))
+
+		e.Record.Set("ticketNumber", ticketNumber)
+
+		return nil
 	})
-}
-
-func GenerateRoutineMaintenanceNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
-	now := time.Now()
-	ticketNumber := fmt.Sprintf("%s%s RM", now.Format("020106"), now.Format("150405"))
-
-	e.Record.Set("ticketNumber", ticketNumber)
-
-	return nil
 }

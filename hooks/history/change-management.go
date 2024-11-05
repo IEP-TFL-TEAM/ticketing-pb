@@ -17,15 +17,11 @@ func NewChangeRequest(app *pocketbase.PocketBase) {
 			return nil
 		}
 
-		return GenerateChangeRequestNumber(app, e, authRecord)
+		now := time.Now()
+		ticketNumber := fmt.Sprintf("%s%s CR", now.Format("020106"), now.Format("150405"))
+
+		e.Record.Set("ticketNumber", ticketNumber)
+
+		return nil
 	})
-}
-
-func GenerateChangeRequestNumber(app *pocketbase.PocketBase, e *core.RecordCreateEvent, authRecord *models.Record) error {
-	now := time.Now()
-	ticketNumber := fmt.Sprintf("%s%s CR", now.Format("020106"), now.Format("150405"))
-
-	e.Record.Set("ticketNumber", ticketNumber)
-
-	return nil
 }
