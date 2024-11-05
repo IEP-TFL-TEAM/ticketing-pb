@@ -20,7 +20,6 @@ func NewTicket(app *pocketbase.PocketBase) {
 
 		now := time.Now()
 		ticketNumber := fmt.Sprintf("%s%s TT", now.Format("020106"), now.Format("150405"))
-
 		e.Record.Set("ticketNumber", ticketNumber)
 
 		return nil
@@ -28,7 +27,7 @@ func NewTicket(app *pocketbase.PocketBase) {
 }
 
 func NewTicketHistory(app *pocketbase.PocketBase) {
-	app.OnRecordBeforeCreateRequest("tickets").Add(func(e *core.RecordCreateEvent) error {
+	app.OnRecordAfterCreateRequest("tickets").Add(func(e *core.RecordCreateEvent) error {
 		authRecord, _ := e.HttpContext.Get(apis.ContextAuthRecordKey).(*models.Record)
 		if authRecord == nil {
 			return nil
@@ -74,7 +73,7 @@ func TrackTicketFieldUpdates(app *pocketbase.PocketBase) {
 			return fmt.Errorf("failed to find history collection: %v", err)
 		}
 
-		fieldsToCheck := []string{"status", "title", "description", "categoryId", "incidentStart"}
+		fieldsToCheck := []string{"status", "title", "description", "categoryId", "categoryLevelId", "incidentStart"}
 
 		for _, field := range fieldsToCheck {
 			oldValue := oldRecord.Get(field)
@@ -86,8 +85,22 @@ func TrackTicketFieldUpdates(app *pocketbase.PocketBase) {
 
 				if field == "incidentStart" {
 					actionDetail = fmt.Sprintf("%s updated the Incident Start Time for this ticket", authFullName)
+
 				} else if field == "categoryId" {
-					actionDetail = fmt.Sprintf("%s updated the Category and Severity for this ticket", authFullName)
+					const collection = "categories"
+
+					oldCategory, _ := app.Dao().FindRecordById(collection, oldValue.(string))
+					newCategory, _ := app.Dao().FindRecordById(collection, newValue.(string))
+
+					actionDetail = fmt.Sprintf("%s updated the Category from %s to %s for this ticket", authFullName, oldCategory.GetString("name"), newCategory.GetString("name"))
+
+				} else if field == "categoryLevelId" {
+					const collection = "categorylevels"
+
+					oldSeverity, _ := app.Dao().FindRecordById(collection, oldValue.(string))
+					newSeverity, _ := app.Dao().FindRecordById(collection, newValue.(string))
+
+					actionDetail = fmt.Sprintf("%s updated the Severity from %s to %s for this ticket", authFullName, oldSeverity.GetString("name"), newSeverity.GetString("name"))
 				}
 
 				historyRecord.Set("action", actionDetail)
