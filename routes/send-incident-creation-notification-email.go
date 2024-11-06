@@ -19,13 +19,13 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 			"/api/send-incident-creation-notification",
 			func(c echo.Context) error {
 				data := struct {
-					Id           string `form:"id"`
-					Email        string `form:"email"`
-					Subject      string `form:"subject"`
-					StartDate    string `form:"startDate"`
-					Description  string `form:"description"`
-					TicketNumber string `form:"ticketNumber"`
-					ActionType   string `form:"actionType"`
+					Id            string `form:"id"`
+					Email         string `form:"email"`
+					Subject       string `form:"subject"`
+					IncidentStart string `form:"incidentStart"`
+					Description   string `form:"description"`
+					TicketNumber  string `form:"ticketNumber"`
+					ActionType    string `form:"actionType"`
 				}{}
 
 				if err := c.Bind(&data); err != nil {
@@ -35,7 +35,7 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 				id := data.Id
 				email := data.Email
 				subject := data.Subject
-				startDate := data.StartDate
+				incidentStart := data.IncidentStart
 				description := data.Description
 				ticketNumber := data.TicketNumber
 				actionType := data.ActionType
@@ -68,14 +68,14 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 				html, _ := registry.LoadFiles(
 					"templates/incident-creation-email.html",
 				).Render(map[string]any{
-					"logoUrl":     logoUrl,
-					"startDate":   startDate,
-					"subject":     subject,
-					"description": description,
-					"url":         fmt.Sprintf("%s/tickets/%s", app.Settings().Meta.AppUrl, id),
-					"action":      action,
-					"greeting":    greeting,
-					"whoToGreet":  whoToGreet,
+					"logoUrl":       logoUrl,
+					"incidentStart": incidentStart,
+					"subject":       subject,
+					"description":   description,
+					"url":           fmt.Sprintf("%s/tickets/%s", app.Settings().Meta.AppUrl, id),
+					"action":        action,
+					"greeting":      greeting,
+					"whoToGreet":    whoToGreet,
 				})
 
 				message := &mailer.Message{

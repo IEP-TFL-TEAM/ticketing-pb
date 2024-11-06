@@ -60,6 +60,7 @@ func SendBroadcastEmail(app *pocketbase.PocketBase) {
 					"logoUrl":       logoUrl,
 					"incidentStart": incidentStart,
 					"incidentEnd":   incidentEnd,
+					"title":         subject,
 					"description":   description,
 					"location":      location,
 					"assignedTeams": assignedTeams,
