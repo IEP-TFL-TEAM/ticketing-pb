@@ -26,6 +26,9 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 					IncidentStart string `form:"incidentStart"`
 					Description   string `form:"description"`
 					TicketNumber  string `form:"ticketNumber"`
+					Category      string `form:"category"`
+					Severity      string `form:"severity"`
+					Technician    string `form:"technician"`
 					ActionType    string `form:"actionType"`
 				}{}
 
@@ -40,6 +43,9 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 				incidentStart := data.IncidentStart
 				description := data.Description
 				ticketNumber := data.TicketNumber
+				category := data.Category
+				severity := data.Severity
+				technician := data.Technician
 				actionType := data.ActionType
 
 				var action string
@@ -78,6 +84,9 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 					"action":        action,
 					"greeting":      greeting,
 					"whoToGreet":    whoToGreet,
+					"category":      category,
+					"severity":      severity,
+					"technician":    technician,
 				})
 
 				message := &mailer.Message{
