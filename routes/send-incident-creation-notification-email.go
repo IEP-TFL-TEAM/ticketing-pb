@@ -21,6 +21,7 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 				data := struct {
 					Id            string `form:"id"`
 					Email         string `form:"email"`
+					Cc            string `form:"cc"`
 					Subject       string `form:"subject"`
 					IncidentStart string `form:"incidentStart"`
 					Description   string `form:"description"`
@@ -34,6 +35,7 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 
 				id := data.Id
 				email := data.Email
+				cc := data.Cc
 				subject := data.Subject
 				incidentStart := data.IncidentStart
 				description := data.Description
@@ -85,6 +87,7 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 					},
 
 					To:      []mail.Address{{Address: email}},
+					Cc:      []mail.Address{{Address: cc}},
 					Subject: fmt.Sprintf("%s - %s", subject, ticketNumber),
 					HTML:    html,
 				}
