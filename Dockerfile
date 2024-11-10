@@ -28,6 +28,9 @@ WORKDIR /app
 # Copy the binary from builder
 COPY --from=builder /app/pb /app/pb
 
+# Copy templates directory
+COPY --from=builder /app/templates /app/templates
+
 # Create directory for persistent data
 RUN mkdir -p /app/pb_data
 
