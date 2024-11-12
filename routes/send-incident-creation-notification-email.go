@@ -56,7 +56,7 @@ func SendIncidentCreationNotification(app *pocketbase.PocketBase) {
 				case "create":
 					greeting = "Bula"
 					whoToGreet = "Team"
-					action = "A new Incident has been Created!"
+					action = "An incident has been registered with the below details. The NOC team will continue to update on the progress of restoration works."
 
 				case "reassign":
 					greeting = "Bula"
